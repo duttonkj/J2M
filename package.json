@@ -1,5 +1,5 @@
 {
-  "name": "jira2md",
+  "name": "@picnic-software/jira2md",
   "version": "2.0.3",
   "keywords": [
     "jira",
@@ -10,7 +10,7 @@
   "homepage": "http://github.com/kylefarris/J2M.git",
   "repository": {
     "type": "git",
-    "url": "http://github.com/kylefarris/J2M.git"
+    "url": "https://github.com/duttonkj/J2M"
   },
   "description": "JIRA to MarkDown text format converter.",
   "main": "index.js",
@@ -18,7 +18,11 @@
     "chai": "^3.3.0"
   },
   "scripts": {
-    "test": "make test"
+    "test": "make test",
+    "release:pre": "npm version prerelease && npm publish --tag pre --access public",
+    "release:patch": "npm version patch && npm publish --access public",
+    "release:minor": "npm version minor && npm publish --access public",
+    "release:major": "npm version major && npm publish --access public"
   },
   "author": "Fokke Zandbergen <mail@fokkezb.nl>",
   "contributors": [

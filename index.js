@@ -49,9 +49,18 @@ J2M.prototype.to_markdown = function(str) {
         // Pre-formatted text
         .replace(/{noformat}/g, '```')
         // Un-named Links
-        .replace(/\[([^|]+)\]/g, '<$1>')
+        .replace(/\[([^|]+)\]/g, function(match, link) {
+          const cleanLink = link.replace('^','');
+          return `[${cleanLink}](${link})`
+        })
         // Named Links
         .replace(/\[(.+?)\|(.+)\]/g, '[$1]($2)')
+        // Embedded Images
+        .replace(/\!([a-zA-Z0-9- .:_()^]*)(\|([a-zA-Z=, 0-9]*))?\!/g, function(match, file) {
+          return `![${file}](%${file})`
+          // return `<a href="https://picnicsoftware-dev.atlassian.net/secure/attachment/10038/${file}?default=false)" target="_blank">![${file}](https://picnicsoftware-dev.atlassian.net/secure/thumbnail/10038/${file}?default=false)</a>`
+          // return `<img alt="${size}" src="https://picnicsoftware-dev.atlassian.net/secure/thumbnail/10038/${size}?default=false" class="">`
+        })
         // Single Paragraph Blockquote
         .replace(/^bq\.\s+/gm, '> ')
         // Remove color: unsupported in md
@@ -119,10 +128,13 @@ J2M.prototype.to_jira = function(str) {
         })
         // Inline-Preformatted Text
         .replace(/`([^`]+)`/g, '{{$1}}')
+         // Embedded Image
+         .replace(/(?:!\[(.*?)\]\((.*?)\))/g, '!$1|thumbnail!')
         // Named Link
         .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '[$1|$2]')
         // Un-Named Link
         .replace(/<([^>]+)>/g, '[$1]')
+       
         // Single Paragraph Blockquote
         .replace(/^>/gm, 'bq.')
         // tables
